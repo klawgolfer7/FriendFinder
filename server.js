@@ -1,32 +1,30 @@
-var express = require("express");
-var bodyParser = require("body-parser");
-var path = require("path");
+var express=require("express");
+var bodyParser=require("body-parser");
+var path=require("path");
 
-var port = 3000;
+//either take the port from the hosting app or localHost 3000
+var PORT=process.env.PORT||3000;
+var app=express();
 
-var names = [
-	{
-		name: "Kevin Lawler",
-		photo: "https://www.facebook.com/photo.php?fbid=10106275589026100&set=a.10100245501190460.2864996.1930710&type=3&theater",
-		scores: [
-		5,
-		1,
-		4,
-		3,
-		5,
-		2,
-		4,
-		5,
-		3,
-		1
-		]
-	}
+// parse application/x-www-form-urlencoded 
+app.use(bodyParser.urlencoded({ extended: true }))
+ 
+// parse application/json 
+app.use(bodyParser.json())
+app.use(bodyParser.text());
+app.use(bodyParser.json({ type: "application/vnd.api+json" }));
+ 
+app.use(express.static(path.join(__dirname + "/public")));
 
-];
+
+require("./app/routing/apiRoutes")(app);
+require("./app/routing/htmlRoutes.js")(app);
 
 
 
-
+app.listen(PORT,function(){
+	console.log("App listening on PORT: " + PORT);
+});
 
 
 
